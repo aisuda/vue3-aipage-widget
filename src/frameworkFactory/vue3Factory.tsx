@@ -3,7 +3,7 @@
  */
 import React from 'react';
 // @ts-ignore
-import { createApp } from 'vue/dist/vue.esm-bundler';
+import { createApp, getCurrentInstance } from 'vue/dist/vue.esm-bundler';
 import { extendObject } from '../utils';
 
 export function createVue3Component(vueObj: any) {
@@ -14,6 +14,7 @@ export function createVue3Component(vueObj: any) {
   class VueFactory extends React.Component<any> {
     domRef: any;
     app: any;
+    vm: any;
     isUnmount: boolean;
 
     constructor(props: any) {
@@ -40,18 +41,19 @@ export function createVue3Component(vueObj: any) {
       Object.keys(amisFunc).forEach((key) => {
         this.app.$props[key] = amisFunc[key];
       });
-      this.app.mount(this.domRef.current);
+      this.vm = this.app.mount(this.domRef.current);
       this.domRef.current.setAttribute('data-component-id', this.props.id);
     }
 
     componentDidUpdate() {
       if (!this.isUnmount) {
-        Object.keys(this.props).forEach(
-          (key) =>
-            typeof this.props[key] !== 'function' &&
-            (this.app[key] = this.props[key]),
-        );
-        this.app.$forceUpdate();
+        const {amisData} = this.resolveAmisProps();
+        if (this.vm) {
+          // this.vm.$data.props = amisData; // 此方法无效
+          Object.keys(amisData).forEach((key) => {
+            this.vm[key] = amisData[key];
+          });
+        }
       }
     }
 

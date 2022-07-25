@@ -215,6 +215,7 @@ function createVue3Component(vueObj) {
     class VueFactory extends React.Component {
         domRef;
         app;
+        vm;
         isUnmount;
         constructor(props) {
             super(props);
@@ -234,14 +235,18 @@ function createVue3Component(vueObj) {
             Object.keys(amisFunc).forEach((key) => {
                 this.app.$props[key] = amisFunc[key];
             });
-            this.app.mount(this.domRef.current);
+            this.vm = this.app.mount(this.domRef.current);
             this.domRef.current.setAttribute('data-component-id', this.props.id);
         }
         componentDidUpdate() {
             if (!this.isUnmount) {
-                Object.keys(this.props).forEach((key) => typeof this.props[key] !== 'function' &&
-                    (this.app[key] = this.props[key]));
-                this.app.$forceUpdate();
+                const { amisData } = this.resolveAmisProps();
+                if (this.vm) {
+                    // this.vm.$data.props = amisData; // 此方法无效
+                    Object.keys(amisData).forEach((key) => {
+                        this.vm[key] = amisData[key];
+                    });
+                }
             }
         }
         componentWillUnmount() {
