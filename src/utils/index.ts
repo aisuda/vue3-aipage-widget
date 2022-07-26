@@ -157,7 +157,7 @@ export function camelToKebab(str: string) {
 
 // 转换小程序组件名
 export function transformComponentId(str: string) {
-  return `-${str}`.replace(/(-[A-Za-z0-9])/g, m => {
+  return `-${str}`.replace(/(-[A-Za-z0-9])/g, (m) => {
     return m.toUpperCase().replace('-', '');
   });
 }

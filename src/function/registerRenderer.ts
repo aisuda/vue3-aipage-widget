@@ -1,5 +1,11 @@
 import { createVue3Component } from '../frameworkFactory/vue3Factory';
-import { getFramework, Framework, isString, consoleTag, transformComponentId } from '../utils';
+import {
+  getFramework,
+  Framework,
+  isString,
+  consoleTag,
+  transformComponentId,
+} from '../utils';
 
 /**
  * 注册自定义组件配置项
@@ -74,18 +80,24 @@ export function registerRenderer(
 
     // 给 aipage-editor 发一个注册插件的事件
     if (window) {
-      const newComponentId = AddCustomRenderer(curRendererOption.type, curRendererComponent);
+      const newComponentId = AddCustomRenderer(
+        curRendererOption.type,
+        curRendererComponent,
+      );
       if (newComponentId) {
-        console.info(`${consoleTag}触发注册自定义渲染器(${curRendererOption.type})事件:`, {
-          type: curRendererOption.type,
-          component: curRendererComponent,
-          framework: curRendererOption.framework,
-        });
-         window.postMessage(
+        console.info(
+          `${consoleTag}触发注册自定义渲染器(${curRendererOption.type})事件:`,
+          {
+            type: curRendererOption.type,
+            component: curRendererComponent,
+            framework: curRendererOption.framework,
+          },
+        );
+        window.postMessage(
           {
             type: 'aipage-editor-register-renderer-event',
             eventMsg: `${consoleTag}注册一个自定义aipage-editor渲染器`,
-            customComponentId: newComponentId
+            customComponentId: newComponentId,
           },
           '*',
         );
@@ -105,7 +117,9 @@ function AddCustomRenderer(type: string, component: any) {
     window.AIPageEditorCustomRenderers[componentId] = component;
     return componentId;
   } else {
-    console.error(`${consoleTag}自定义渲染器失败，已存在同名渲染器类型(${type})。`);
+    console.error(
+      `${consoleTag}自定义渲染器失败，已存在同名渲染器类型(${type})。`,
+    );
   }
   return null;
 }

@@ -31,10 +31,8 @@ export function createVue3Component(vueObj: any) {
 
       // 传入的Vue属性
       this.app = createApp({
-        data: () => extendObject(
-          amisData,
-          typeof data === 'function' ? data() : data,
-        ),
+        data: () =>
+          extendObject(amisData, typeof data === 'function' ? data() : data),
         ...rest,
         props: rest.props || {},
       });
@@ -47,7 +45,7 @@ export function createVue3Component(vueObj: any) {
 
     componentDidUpdate() {
       if (!this.isUnmount) {
-        const {amisData} = this.resolveAmisProps();
+        const { amisData } = this.resolveAmisProps();
         if (this.vm) {
           // this.vm.$data.props = amisData; // 此方法无效
           Object.keys(amisData).forEach((key) => {
