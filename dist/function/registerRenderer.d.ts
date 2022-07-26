@@ -19,7 +19,7 @@ export interface RendererOption {
  * newRenderer: 新的渲染器,
  * rendererOption: {
  *   type: 渲染器的type类型，比如：input、text-area、select-user等
- *   framework?: 技术栈类型，默认为 react 技术栈，可选技术栈：vue2、react
+ *   framework?: 技术栈类型，默认为 react 技术栈，可选技术栈：vue3、react
  * }
  * 备注：暂不支持 jquery 技术栈
  */
