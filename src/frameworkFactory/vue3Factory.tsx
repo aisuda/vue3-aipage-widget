@@ -3,7 +3,7 @@
  */
 import React from 'react';
 // @ts-ignore
-import { createApp, getCurrentInstance } from 'vue/dist/vue.esm-bundler';
+import { createApp, getCurrentInstance } from 'vue';
 import { extendObject } from '../utils';
 
 export function createVue3Component(vueObj: any) {

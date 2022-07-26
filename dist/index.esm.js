@@ -1,5 +1,5 @@
 import React from 'react';
-import { createApp } from 'vue/dist/vue.esm-bundler';
+import { createApp } from 'vue';
 import pick from 'lodash/pick';
 import isNumber from 'lodash/isNumber';
 import cloneDeep from 'lodash/cloneDeep';
@@ -147,7 +147,7 @@ function camelToKebab(str) {
 }
 // 转换小程序组件名
 function transformComponentId(str) {
-    return `-${str}`.replace(/(-[A-Za-z0-9])/g, m => {
+    return `-${str}`.replace(/(-[A-Za-z0-9])/g, (m) => {
         return m.toUpperCase().replace('-', '');
     });
 }
@@ -331,7 +331,7 @@ function registerRenderer(newRenderer, rendererOption) {
                 window.postMessage({
                     type: 'aipage-editor-register-renderer-event',
                     eventMsg: `${consoleTag}注册一个自定义aipage-editor渲染器`,
-                    customComponentId: newComponentId
+                    customComponentId: newComponentId,
                 }, '*');
             }
         }

@@ -1,6 +1,6 @@
 {
   "name": "vue3-aipage-widget",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "aipage-editor自定义组件注册器（支持react和vue3.0技术栈），用于注册自定义渲染器和插件",
   "keywords": [
     "vue3-aipage-widget",
