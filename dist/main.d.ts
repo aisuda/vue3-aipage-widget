@@ -7,5 +7,6 @@
  */
 export { registerPlugin } from './function/registerPlugin';
 export { registerRenderer } from './function/registerRenderer';
+export { createVue3Component } from './frameworkFactory/vue3Factory';
 export * from './utils/style';
 export * from './utils/index';
