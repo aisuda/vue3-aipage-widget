@@ -16,8 +16,6 @@
     "preview": "amis preview",
     "linkDebug": "amis linkDebug",
     "build": "amis build2lib && amis build2esm",
-    "build2lib": "amis build2lib",
-    "build2esm": "amis build2esm",
     "format": "prettier --write \"{src,demo}/**/**/*.{js,jsx,ts,tsx,vue,scss,json}\""
   },
   "files": [
