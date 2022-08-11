@@ -110,7 +110,7 @@ declare const window: Window & { AIPageEditorCustomRenderers: any };
 
 function AddCustomRenderer(type: string, component: any) {
   if (window && !window.AIPageEditorCustomRenderers) {
-    (window as any).AIPageEditorCustomRenderers = {};
+    window.AIPageEditorCustomRenderers = {};
   }
   const componentId = transformComponentId(type);
   if (!window.AIPageEditorCustomRenderers[componentId]) {
@@ -118,7 +118,7 @@ function AddCustomRenderer(type: string, component: any) {
     return componentId;
   } else {
     console.error(
-      `${consoleTag}自定义渲染器失败，已存在同名渲染器类型(${type})。`,
+      `${consoleTag}注册自定义渲染器失败，已存在同名渲染器类型(${type})。`,
     );
   }
   return null;

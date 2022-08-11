@@ -1,7 +1,7 @@
 /*!
- * vue3-aipage-widget v1.0.5
+ * vue3-aipage-widget v1.0.6
  * author: wibetter
  * build tool: AKFun
- * build time: Tue Aug 02 2022 11:24:52 GMT+0800 (中国标准时间)
+ * build time: Thu Aug 11 2022 14:35:30 GMT+0800 (中国标准时间)
  * build tool info: https://github.com/wibetter/akfun
  */

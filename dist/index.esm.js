@@ -193,16 +193,33 @@ function registerPlugin(newEditorPlugin) {
         // AIPageEditor.registerPlugin(newEditorPlugin); // 可调用 aipage-editor 的 registerPlugin
         // 给 aipage-editor 发一个注册插件的事件
         if (window && window.postMessage) {
-            console.info(`${consoleTag}触发注册自定义插件(${newEditorPlugin.name})事件:`, newEditorPlugin);
-            window.postMessage({
-                type: 'aipage-editor-register-plugin-event',
-                eventMsg: `${consoleTag}注册一个自定义aipage-editor插件`,
-                editorPluginName: newEditorPlugin.name,
-                customEditorPlugin: newEditorPlugin,
-            }, '*');
+            const newComponentId = AddCustomPlugin(newEditorPlugin.id, newEditorPlugin);
+            if (newComponentId) {
+                console.info(`${consoleTag}触发注册自定义插件(${newEditorPlugin.name})事件:`, newEditorPlugin);
+                window.postMessage({
+                    type: 'aipage-editor-register-plugin-event',
+                    eventMsg: `${consoleTag}注册一个自定义aipage-editor插件`,
+                    editorPluginName: newEditorPlugin.name,
+                    customEditorPlugin: newEditorPlugin,
+                }, '*');
+            }
         }
     }
     return newEditorPlugin;
+}
+function AddCustomPlugin(id, plugin) {
+    if (window && !window.AIPageEditorCustomPlugins) {
+        window.AIPageEditorCustomPlugins = {};
+    }
+    const componentId = transformComponentId(id);
+    if (!window.AIPageEditorCustomPlugins[componentId]) {
+        window.AIPageEditorCustomPlugins[componentId] = plugin;
+        return componentId;
+    }
+    else {
+        console.error(`${consoleTag}注册自定义插件失败，已存在同名插件(${id})。`);
+    }
+    return null;
 }
 
 /**
@@ -347,7 +364,7 @@ function AddCustomRenderer(type, component) {
         return componentId;
     }
     else {
-        console.error(`${consoleTag}自定义渲染器失败，已存在同名渲染器类型(${type})。`);
+        console.error(`${consoleTag}注册自定义渲染器失败，已存在同名渲染器类型(${type})。`);
     }
     return null;
 }
