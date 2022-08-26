@@ -230,6 +230,7 @@ export function getBoxPosition(component: any) {
     result[pos[0]] = +style.y + 'px';
     result.height = toWHset(style, 'height');
     result.width = toWHset(style, 'width');
+    result.position = 'absolute';
   }
   if (style.opacity >= 0) {
     result.opacity = +style.opacity / 100;

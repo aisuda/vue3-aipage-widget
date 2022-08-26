@@ -83,9 +83,7 @@ export function createVue3Component(vueObj: any) {
         ...getBoxPosition(node || this.props),
         ...transformStyle(style),
       };
-      return (
-        <div ref={this.domRef} style={curStyle} className="pack-item"></div>
-      );
+      return <div ref={this.domRef} style={curStyle}></div>;
     }
   }
 

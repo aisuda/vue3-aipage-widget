@@ -394,6 +394,7 @@ function getBoxPosition(component) {
         result[pos[0]] = +style.y + 'px';
         result.height = toWHset(style, 'height');
         result.width = toWHset(style, 'width');
+        result.position = 'absolute';
     }
     if (style.opacity >= 0) {
         result.opacity = +style.opacity / 100;
@@ -673,9 +674,9 @@ function createVue3Component(vueObj) {
             const style = componentProperties.style || {};
             const curStyle = {
                 ...getBoxPosition(node || this.props),
-                ...transformStyle(style)
+                ...transformStyle(style),
             };
-            return React.createElement("div", { ref: this.domRef, style: curStyle, className: 'pack-item' });
+            return (React.createElement("div", { ref: this.domRef, style: curStyle }));
         }
     }
     return VueFactory;
