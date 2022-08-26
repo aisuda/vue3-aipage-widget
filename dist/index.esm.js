@@ -222,153 +222,6 @@ function AddCustomPlugin(id, plugin) {
     return null;
 }
 
-/**
- * @file 自定义组件所需的 vue3.0 对接
- */
-function createVue3Component(vueObj) {
-    if (!vueObj || (typeof vueObj !== 'function' && typeof vueObj !== 'object')) {
-        return;
-    }
-    class VueFactory extends React.Component {
-        domRef;
-        app;
-        vm;
-        isUnmount;
-        constructor(props) {
-            super(props);
-            this.domRef = React.createRef();
-            this.resolveAmisProps = this.resolveAmisProps.bind(this);
-        }
-        componentDidMount() {
-            const { amisData, amisFunc } = this.resolveAmisProps();
-            const { data, ...rest } = (vueObj =
-                typeof vueObj === 'function' ? new vueObj() : vueObj);
-            // 传入的Vue属性
-            this.app = createApp({
-                data: () => extendObject(amisData, typeof data === 'function' ? data() : data),
-                ...rest,
-                props: rest.props || {},
-            });
-            Object.keys(amisFunc).forEach((key) => {
-                this.app.$props[key] = amisFunc[key];
-            });
-            this.vm = this.app.mount(this.domRef.current);
-            this.domRef.current.setAttribute('data-component-id', this.props.id);
-        }
-        componentDidUpdate() {
-            if (!this.isUnmount) {
-                const { amisData } = this.resolveAmisProps();
-                if (this.vm) {
-                    // this.vm.$data.props = amisData; // 此方法无效
-                    Object.keys(amisData).forEach((key) => {
-                        this.vm[key] = amisData[key];
-                    });
-                }
-            }
-        }
-        componentWillUnmount() {
-            this.isUnmount = true;
-            this.app.unmount();
-        }
-        resolveAmisProps() {
-            let amisFunc = {};
-            let amisData = {};
-            Object.keys(this.props).forEach((key) => {
-                const value = this.props[key];
-                if (typeof value === 'function') {
-                    amisFunc[key] = value;
-                }
-                else {
-                    amisData[key] = value;
-                }
-            });
-            return { amisData, amisFunc };
-        }
-        render() {
-            return React.createElement("div", { ref: this.domRef });
-        }
-    }
-    return VueFactory;
-}
-
-/**
- * registerRenderer: 注册一个aipage-editor自定义渲染器
- *【方法参数说明】
- * newRenderer: 新的渲染器,
- * rendererOption: {
- *   type: 渲染器的type类型，比如：input、text-area、select-user等
- *   framework?: 技术栈类型，默认为 react 技术栈，可选技术栈：vue3、react
- * }
- * 备注：暂不支持 jquery 技术栈
- */
-function registerRenderer(newRenderer, rendererOption) {
-    if (!newRenderer) {
-        return;
-    }
-    // 1.默认注册配置参数
-    const curRendererOption = {
-        type: '',
-        framework: Framework.react, // 默认为 react 技术栈
-    };
-    // 2.获取相关配置参数
-    if (rendererOption && isString(rendererOption)) {
-        // rendererOption为字符串则将其设置为type
-        Object.assign(curRendererOption, {
-            type: rendererOption,
-        });
-    }
-    else {
-        Object.assign(curRendererOption, rendererOption);
-    }
-    if (curRendererOption && !curRendererOption.type) {
-        console.error(`${consoleTag}自定义组件注册失败，自定义组件类型（type）不能为空。`);
-    }
-    else {
-        // 修正framework数值
-        curRendererOption.framework = getFramework(curRendererOption.framework);
-        // 当前支持的技术栈类型
-        const resolverMap = {
-            react: (i) => i,
-            // vue2: createVue2Component,
-            vue3: createVue3Component,
-        };
-        // 支持多技术栈
-        const curRendererComponent = resolverMap[curRendererOption.framework](newRenderer);
-        // 注册aipage-editor渲染器
-        // AIPageEditor.registerRenderer({type: curRendererOption.type, component: curRendererComponent}); // 可调用 aipage-editor 的 registerRenderer
-        // 给 aipage-editor 发一个注册插件的事件
-        if (window) {
-            const newComponentId = AddCustomRenderer(curRendererOption.type, curRendererComponent);
-            if (newComponentId) {
-                console.info(`${consoleTag}触发注册自定义渲染器(${curRendererOption.type})事件:`, {
-                    type: curRendererOption.type,
-                    component: curRendererComponent,
-                    framework: curRendererOption.framework,
-                });
-                window.postMessage({
-                    type: 'aipage-editor-register-renderer-event',
-                    eventMsg: `${consoleTag}注册一个自定义aipage-editor渲染器`,
-                    customComponentId: newComponentId,
-                }, '*');
-            }
-        }
-    }
-}
-function AddCustomRenderer(type, component) {
-    if (window && !window.AIPageEditorCustomRenderers) {
-        window.AIPageEditorCustomRenderers = {};
-    }
-    const componentId = transformComponentId(type);
-    if (!window.AIPageEditorCustomRenderers[componentId]) {
-        window.AIPageEditorCustomRenderers[componentId] = component;
-        return componentId;
-    }
-    else {
-        console.error(`${consoleTag}注册自定义渲染器失败，已存在同名渲染器类型(${type})。`);
-    }
-    return null;
-}
-
 const viewportWidth = 375;
 // TODO 主题色处理
 const parseThemeColor = function (color) {
@@ -537,8 +390,8 @@ function getBoxPosition(component) {
         }
     }
     else {
-        result[pos[1]] = +style.x;
-        result[pos[0]] = +style.y;
+        result[pos[1]] = +style.x + 'px';
+        result[pos[0]] = +style.y + 'px';
         result.height = toWHset(style, 'height');
         result.width = toWHset(style, 'width');
     }
@@ -752,5 +605,158 @@ function getZIndexStyle(zIndex) {
     return style;
 }
 const isMobile = window.matchMedia?.('(max-width: 768px)').matches;
+
+/**
+ * @file 自定义组件所需的 vue3.0 对接
+ */
+function createVue3Component(vueObj) {
+    if (!vueObj || (typeof vueObj !== 'function' && typeof vueObj !== 'object')) {
+        return;
+    }
+    class VueFactory extends React.Component {
+        domRef;
+        app;
+        vm;
+        isUnmount;
+        constructor(props) {
+            super(props);
+            this.domRef = React.createRef();
+            this.resolveAmisProps = this.resolveAmisProps.bind(this);
+        }
+        componentDidMount() {
+            const { amisData, amisFunc } = this.resolveAmisProps();
+            const { data, ...rest } = (vueObj =
+                typeof vueObj === 'function' ? new vueObj() : vueObj);
+            // 传入的Vue属性
+            this.app = createApp({
+                data: () => extendObject(amisData, typeof data === 'function' ? data() : data),
+                ...rest,
+                props: rest.props || {},
+            });
+            Object.keys(amisFunc).forEach((key) => {
+                this.app.$props[key] = amisFunc[key];
+            });
+            this.vm = this.app.mount(this.domRef.current);
+            this.domRef.current.setAttribute('data-component-id', this.props.id);
+        }
+        componentDidUpdate() {
+            if (!this.isUnmount) {
+                const { amisData } = this.resolveAmisProps();
+                if (this.vm) {
+                    // this.vm.$data.props = amisData; // 此方法无效
+                    Object.keys(amisData).forEach((key) => {
+                        this.vm[key] = amisData[key];
+                    });
+                }
+            }
+        }
+        componentWillUnmount() {
+            this.isUnmount = true;
+            this.app.unmount();
+        }
+        resolveAmisProps() {
+            let amisFunc = {};
+            let amisData = {};
+            Object.keys(this.props).forEach((key) => {
+                const value = this.props[key];
+                if (typeof value === 'function') {
+                    amisFunc[key] = value;
+                }
+                else {
+                    amisData[key] = value;
+                }
+            });
+            return { amisData, amisFunc };
+        }
+        render() {
+            const { componentProperties, node } = this.props;
+            const style = componentProperties.style || {};
+            const curStyle = {
+                ...getBoxPosition(node || this.props),
+                ...transformStyle(style)
+            };
+            return React.createElement("div", { ref: this.domRef, style: curStyle, className: 'pack-item' });
+        }
+    }
+    return VueFactory;
+}
+
+/**
+ * registerRenderer: 注册一个aipage-editor自定义渲染器
+ *【方法参数说明】
+ * newRenderer: 新的渲染器,
+ * rendererOption: {
+ *   type: 渲染器的type类型，比如：input、text-area、select-user等
+ *   framework?: 技术栈类型，默认为 react 技术栈，可选技术栈：vue3、react
+ * }
+ * 备注：暂不支持 jquery 技术栈
+ */
+function registerRenderer(newRenderer, rendererOption) {
+    if (!newRenderer) {
+        return;
+    }
+    // 1.默认注册配置参数
+    const curRendererOption = {
+        type: '',
+        framework: Framework.react, // 默认为 react 技术栈
+    };
+    // 2.获取相关配置参数
+    if (rendererOption && isString(rendererOption)) {
+        // rendererOption为字符串则将其设置为type
+        Object.assign(curRendererOption, {
+            type: rendererOption,
+        });
+    }
+    else {
+        Object.assign(curRendererOption, rendererOption);
+    }
+    if (curRendererOption && !curRendererOption.type) {
+        console.error(`${consoleTag}自定义组件注册失败，自定义组件类型（type）不能为空。`);
+    }
+    else {
+        // 修正framework数值
+        curRendererOption.framework = getFramework(curRendererOption.framework);
+        // 当前支持的技术栈类型
+        const resolverMap = {
+            react: (i) => i,
+            // vue2: createVue2Component,
+            vue3: createVue3Component,
+        };
+        // 支持多技术栈
+        const curRendererComponent = resolverMap[curRendererOption.framework](newRenderer);
+        // 注册aipage-editor渲染器
+        // AIPageEditor.registerRenderer({type: curRendererOption.type, component: curRendererComponent}); // 可调用 aipage-editor 的 registerRenderer
+        // 给 aipage-editor 发一个注册插件的事件
+        if (window) {
+            const newComponentId = AddCustomRenderer(curRendererOption.type, curRendererComponent);
+            if (newComponentId) {
+                console.info(`${consoleTag}触发注册自定义渲染器(${curRendererOption.type})事件:`, {
+                    type: curRendererOption.type,
+                    component: curRendererComponent,
+                    framework: curRendererOption.framework,
+                });
+                window.postMessage({
+                    type: 'aipage-editor-register-renderer-event',
+                    eventMsg: `${consoleTag}注册一个自定义aipage-editor渲染器`,
+                    customComponentId: newComponentId,
+                }, '*');
+            }
+        }
+    }
+}
+function AddCustomRenderer(type, component) {
+    if (window && !window.AIPageEditorCustomRenderers) {
+        window.AIPageEditorCustomRenderers = {};
+    }
+    const componentId = transformComponentId(type);
+    if (!window.AIPageEditorCustomRenderers[componentId]) {
+        window.AIPageEditorCustomRenderers[componentId] = component;
+        return componentId;
+    }
+    else {
+        console.error(`${consoleTag}注册自定义渲染器失败，已存在同名渲染器类型(${type})。`);
+    }
+    return null;
+}
 
 export { Framework, camelToKebab, cloneObject, consoleTag, createVue3Component, dateFormat, deepClone, extendObject, getAlignModeStyle, getBackgroundStyle, getBorderRadius, getBoxPosition, getBoxShadow, getBoxStyle, getClasses, getFlexStyle, getFontStyle, getFramework, getImageSize, getLegacyHref, getThemeStyle, getVideoThumbnail, getWeek, getZIndexStyle, isEditorPlugin, isMobile, isNumberFormat, isObject, isString, isValidCSS, kebabToCamel, makeClassnames, parseThemeColor, registerPlugin, registerRenderer, toPx, toRpx, toWHset, transformComponentId, transformStyle };

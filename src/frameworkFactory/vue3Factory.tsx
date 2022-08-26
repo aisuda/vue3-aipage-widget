@@ -5,6 +5,7 @@ import React from 'react';
 // @ts-ignore
 import { createApp, getCurrentInstance } from 'vue';
 import { extendObject } from '../utils';
+import { getBoxPosition, transformStyle } from '../utils/style';
 
 export function createVue3Component(vueObj: any) {
   if (!vueObj || (typeof vueObj !== 'function' && typeof vueObj !== 'object')) {
@@ -76,7 +77,15 @@ export function createVue3Component(vueObj: any) {
     }
 
     render() {
-      return <div ref={this.domRef}></div>;
+      const { componentProperties, node } = this.props;
+      const style = componentProperties.style || {};
+      const curStyle = {
+        ...getBoxPosition(node || this.props),
+        ...transformStyle(style),
+      };
+      return (
+        <div ref={this.domRef} style={curStyle} className="pack-item"></div>
+      );
     }
   }
 

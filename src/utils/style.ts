@@ -226,8 +226,8 @@ export function getBoxPosition(component: any) {
       result.flexShrink = 0;
     }
   } else {
-    result[pos[1]] = +style.x;
-    result[pos[0]] = +style.y;
+    result[pos[1]] = +style.x + 'px';
+    result[pos[0]] = +style.y + 'px';
     result.height = toWHset(style, 'height');
     result.width = toWHset(style, 'width');
   }
