@@ -78,7 +78,10 @@ export function createVue3Component(vueObj: any) {
 
     render() {
       const { componentProperties, node } = this.props;
-      const style = componentProperties.style || {};
+      const style =
+        componentProperties && componentProperties.style
+          ? componentProperties.style
+          : {};
       const curStyle = {
         ...getBoxPosition(node || this.props),
         ...transformStyle(style),

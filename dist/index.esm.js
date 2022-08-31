@@ -671,12 +671,12 @@ function createVue3Component(vueObj) {
         }
         render() {
             const { componentProperties, node } = this.props;
-            const style = componentProperties.style || {};
+            const style = componentProperties && componentProperties.style ? componentProperties.style : {};
             const curStyle = {
                 ...getBoxPosition(node || this.props),
                 ...transformStyle(style),
             };
-            return (React.createElement("div", { ref: this.domRef, style: curStyle }));
+            return React.createElement("div", { ref: this.domRef, style: curStyle });
         }
     }
     return VueFactory;
