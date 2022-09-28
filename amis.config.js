@@ -35,7 +35,7 @@ module.exports = {
   },
   preview: {
     entry: { // 本地预览自定义组件内容
-      index: './demo/preview.js',
+      index: './demo2/preview.js',
     },
     // 用于开启本地调试模式的相关配置信息
     NODE_ENV: 'development',

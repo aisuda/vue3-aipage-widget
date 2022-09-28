@@ -392,9 +392,9 @@ function getBoxPosition(component) {
     else {
         result[pos[1]] = +style.x + 'px';
         result[pos[0]] = +style.y + 'px';
-        result.height = toWHset(style, 'height');
-        result.width = toWHset(style, 'width');
-        result.position = 'absolute';
+        result.height = toWHset(style, 'height') || 'auto';
+        result.width = toWHset(style, 'width') || '100%';
+        result.position = style.position || 'absolute';
     }
     if (style.opacity >= 0) {
         result.opacity = +style.opacity / 100;
@@ -671,7 +671,9 @@ function createVue3Component(vueObj) {
         }
         render() {
             const { componentProperties, node } = this.props;
-            const style = componentProperties && componentProperties.style ? componentProperties.style : {};
+            const style = componentProperties && componentProperties.style
+                ? componentProperties.style
+                : {};
             const curStyle = {
                 ...getBoxPosition(node || this.props),
                 ...transformStyle(style),
