@@ -47,8 +47,13 @@ export interface PluginOption {
 
   /**
    * 自定义组件支持的设备类型
-   * 可指定多个设备可用
-   * 备注: 当前 aipage-editor 支持的设备类型: pc、h5、app（小程序）
+   * 可指定多个设备可用，当前 aipage-editor 支持的设备类型: pc、mobile、app、quickapp、quickapp-card
+   * 设备类型说明:
+   * pc: PC桌面端
+   * mobile: H5移动端
+   * app: 小程序端
+   * quickapp: 快应用端
+   * quickapp-card: 快应用卡片端
    */
   device: Array<string>;
 

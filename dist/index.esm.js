@@ -1,5 +1,5 @@
 import React from 'react';
-import { createApp } from 'vue';
+import { createApp, ref } from 'vue';
 import pick from 'lodash/pick';
 import isNumber from 'lodash/isNumber';
 import cloneDeep from 'lodash/cloneDeep';
@@ -664,7 +664,7 @@ function createVue3Component(vueObj) {
                     amisFunc[key] = value;
                 }
                 else {
-                    amisData[key] = value;
+                    amisData[key] = ref(value);
                 }
             });
             return { amisData, amisFunc };

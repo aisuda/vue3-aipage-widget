@@ -3,7 +3,7 @@
  */
 import React from 'react';
 // @ts-ignore
-import { createApp, getCurrentInstance } from 'vue';
+import { createApp, getCurrentInstance, ref } from 'vue';
 import { extendObject } from '../utils';
 import { getBoxPosition, transformStyle } from '../utils/style';
 
@@ -70,7 +70,7 @@ export function createVue3Component(vueObj: any) {
         if (typeof value === 'function') {
           amisFunc[key] = value;
         } else {
-          amisData[key] = value;
+          amisData[key] = ref(value);
         }
       });
       return { amisData, amisFunc };
