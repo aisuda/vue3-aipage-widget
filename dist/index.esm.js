@@ -1,5 +1,6 @@
+import isObject$1 from 'lodash/isObject';
 import React from 'react';
-import { createApp, ref } from 'vue';
+import { createApp, isProxy, shallowRef, ref } from 'vue';
 import pick from 'lodash/pick';
 import isNumber from 'lodash/isNumber';
 import cloneDeep from 'lodash/cloneDeep';
@@ -664,7 +665,16 @@ function createVue3Component(vueObj) {
                     amisFunc[key] = value;
                 }
                 else {
-                    amisData[key] = ref(value);
+                    if (isProxy(value)) {
+                        amisData[key] = shallowRef(value);
+                    }
+                    else if (isObject$1(value)) {
+                        amisData[key] = ref(value);
+                    }
+                    else {
+                        // 非对象类数据无需特殊处理
+                        amisData[key] = value;
+                    }
                 }
             });
             return { amisData, amisFunc };

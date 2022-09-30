@@ -1,9 +1,10 @@
 /**
  * @file 自定义组件所需的 vue3.0 对接
  */
+import isObject from 'lodash/isObject';
 import React from 'react';
 // @ts-ignore
-import { createApp, getCurrentInstance, ref } from 'vue';
+import { createApp, getCurrentInstance, ref, isProxy, shallowRef } from 'vue';
 import { extendObject } from '../utils';
 import { getBoxPosition, transformStyle } from '../utils/style';
 
@@ -70,7 +71,14 @@ export function createVue3Component(vueObj: any) {
         if (typeof value === 'function') {
           amisFunc[key] = value;
         } else {
-          amisData[key] = ref(value);
+          if (isProxy(value)) {
+            amisData[key] = shallowRef(value);
+          } else if (isObject(value)) {
+            amisData[key] = ref(value);
+          } else {
+            // 非对象类数据无需特殊处理
+            amisData[key] = value;
+          }
         }
       });
       return { amisData, amisFunc };
