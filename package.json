@@ -1,6 +1,6 @@
 {
   "name": "vue3-aipage-widget",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "aipage-editor自定义组件注册器（支持react和vue3.0技术栈），用于注册自定义渲染器和插件",
   "keywords": [
     "vue3-aipage-widget",
@@ -51,7 +51,7 @@
     "@types/lodash": "^4.14.182",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^17.0.13",
-    "amis-widget-cli": "^2.0.5-vue3-beta.1",
+    "@wibetter/amis-widget-cli": "^3.0.2",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.9",
     "prettier": "^2.0.5",
