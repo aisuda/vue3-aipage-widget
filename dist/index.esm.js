@@ -1,12 +1,12 @@
-import isObject$1 from 'lodash/isObject';
 import React from 'react';
-import { createApp, isProxy, shallowRef, ref } from 'vue';
+import Vue, { isProxy, shallowRef, ref } from 'vue';
+import isObject$1 from 'lodash/isObject';
 import pick from 'lodash/pick';
 import isNumber from 'lodash/isNumber';
 import cloneDeep from 'lodash/cloneDeep';
 import cx from 'classnames';
 
-const consoleTag = '[vue3-aipage-widget]'; // 输出标记
+const consoleTag = '[aipage-widget]'; // 输出标记
 /**
  * 获取技术栈标识
  * 目的：兼容用户非标准写法
@@ -22,19 +22,19 @@ function getFramework(_framework) {
         case 'jq':
             curFramework = Framework.jquery;
             break;
+        case 'vue': // 默认使用 vue 2.0
         case 'vue2':
         case 'vue 2':
         case 'vue2.0':
         case 'vue 2.0':
             curFramework = Framework.vue2;
-            console.error('vue3-aipage-widget 不支持 vue2.0 技术栈，请改用aipage-widget支持。');
             break;
-        case 'vue': // 默认使用 vue 3.0
         case 'vue3':
         case 'vue 3':
         case 'vue3.0':
         case 'vue 3.0':
             curFramework = Framework.vue3;
+            console.error('aipage-widget 不支持 vue3.0 技术栈，请改用aipage-widget支持。');
             break;
         default:
             curFramework = Framework.react;
@@ -42,7 +42,7 @@ function getFramework(_framework) {
     return curFramework;
 }
 /**
- * 当前vue3-aipage-widget支持的技术栈
+ * 当前aipage-widget支持的技术栈
  * 备注：vue2和vue3不能同时存在
  */
 var Framework;
@@ -609,15 +609,14 @@ function getZIndexStyle(zIndex) {
 const isMobile = window.matchMedia?.('(max-width: 768px)').matches;
 
 /**
- * @file 自定义组件所需的 vue3.0 对接
+ * @file 自定义组件所需的 vue2.0 对接
  */
-function createVue3Component(vueObj) {
+function createVue2Component(vueObj) {
     if (!vueObj || (typeof vueObj !== 'function' && typeof vueObj !== 'object')) {
         return;
     }
     class VueFactory extends React.Component {
         domRef;
-        app;
         vm;
         isUnmount;
         constructor(props) {
@@ -630,31 +629,27 @@ function createVue3Component(vueObj) {
             const { data, ...rest } = (vueObj =
                 typeof vueObj === 'function' ? new vueObj() : vueObj);
             // 传入的Vue属性
-            this.app = createApp({
+            this.vm = new Vue({
                 data: () => extendObject(amisData, typeof data === 'function' ? data() : data),
                 ...rest,
                 props: rest.props || {},
             });
             Object.keys(amisFunc).forEach((key) => {
-                this.app.$props[key] = amisFunc[key];
+                this.vm.$props[key] = amisFunc[key];
             });
-            this.vm = this.app.mount(this.domRef.current);
+            this.domRef.current.appendChild(this.vm.$mount().$el); // 最外层会多一个div【待优化】
             this.domRef.current.setAttribute('data-component-id', this.props.id);
         }
         componentDidUpdate() {
             if (!this.isUnmount) {
-                const { amisData } = this.resolveAmisProps();
-                if (this.vm) {
-                    Object.keys(amisData).forEach((key) => {
-                        this.vm[key] = amisData[key];
-                    });
-                    this.vm.$forceUpdate();
-                }
+                Object.keys(this.props).forEach((key) => typeof this.props[key] !== 'function' &&
+                    (this.vm[key] = this.props[key]));
+                this.vm.$forceUpdate();
             }
         }
         componentWillUnmount() {
             this.isUnmount = true;
-            this.app.unmount();
+            this.vm.$destroy();
         }
         resolveAmisProps() {
             let amisFunc = {};
@@ -732,8 +727,8 @@ function registerRenderer(newRenderer, rendererOption) {
         // 当前支持的技术栈类型
         const resolverMap = {
             react: (i) => i,
-            // vue2: createVue2Component,
-            vue3: createVue3Component,
+            vue2: createVue2Component,
+            // vue3: createVue3Component,
         };
         // 支持多技术栈
         const curRendererComponent = resolverMap[curRendererOption.framework](newRenderer);
@@ -772,4 +767,4 @@ function AddCustomRenderer(type, component) {
     return null;
 }
 
-export { Framework, camelToKebab, cloneObject, consoleTag, createVue3Component, dateFormat, deepClone, extendObject, getAlignModeStyle, getBackgroundStyle, getBorderRadius, getBoxPosition, getBoxShadow, getBoxStyle, getClasses, getFlexStyle, getFontStyle, getFramework, getImageSize, getLegacyHref, getThemeStyle, getVideoThumbnail, getWeek, getZIndexStyle, isEditorPlugin, isMobile, isNumberFormat, isObject, isString, isValidCSS, kebabToCamel, makeClassnames, parseThemeColor, registerPlugin, registerRenderer, toPx, toRpx, toWHset, transformComponentId, transformStyle };
+export { Framework, camelToKebab, cloneObject, consoleTag, createVue2Component, dateFormat, deepClone, extendObject, getAlignModeStyle, getBackgroundStyle, getBorderRadius, getBoxPosition, getBoxShadow, getBoxStyle, getClasses, getFlexStyle, getFontStyle, getFramework, getImageSize, getLegacyHref, getThemeStyle, getVideoThumbnail, getWeek, getZIndexStyle, isEditorPlugin, isMobile, isNumberFormat, isObject, isString, isValidCSS, kebabToCamel, makeClassnames, parseThemeColor, registerPlugin, registerRenderer, toPx, toRpx, toWHset, transformComponentId, transformStyle };

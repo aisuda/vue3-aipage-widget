@@ -1,5 +1,5 @@
 /**
- * vue3-aipage-widget: 自定义组件注册器（支持vue3.0）
+ * aipage-widget: 自定义组件注册器（支持vue2.0）
  *
  * 【提供的工具方法清单】
  * registerRenderer: 注册 aipage-editor 自定义组件（补充自定义渲染器）
@@ -7,7 +7,7 @@
  */
 export { registerPlugin } from './function/registerPlugin';
 export { registerRenderer } from './function/registerRenderer';
-export { createVue3Component } from './frameworkFactory/vue3Factory';
+export { createVue2Component } from './frameworkFactory/vueFactory';
 
 export * from './utils/style';
 export * from './utils/index';

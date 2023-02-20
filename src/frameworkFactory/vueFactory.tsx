@@ -1,21 +1,20 @@
 /**
- * @file 自定义组件所需的 vue3.0 对接
+ * @file 自定义组件所需的 vue2.0 对接
  */
-import isObject from 'lodash/isObject';
 import React from 'react';
-// @ts-ignore
-import { createApp, getCurrentInstance, ref, isProxy, shallowRef } from 'vue';
+import Vue from 'vue';
+import { ref, isProxy, shallowRef } from 'vue';
+import isObject from 'lodash/isObject';
 import { extendObject } from '../utils';
 import { getBoxPosition, transformStyle } from '../utils/style';
 
-export function createVue3Component(vueObj: any) {
+export function createVue2Component(vueObj: any) {
   if (!vueObj || (typeof vueObj !== 'function' && typeof vueObj !== 'object')) {
     return;
   }
 
   class VueFactory extends React.Component<any> {
     domRef: any;
-    app: any;
     vm: any;
     isUnmount: boolean;
 
@@ -32,34 +31,33 @@ export function createVue3Component(vueObj: any) {
         typeof vueObj === 'function' ? new vueObj() : vueObj);
 
       // 传入的Vue属性
-      this.app = createApp({
+      this.vm = new Vue({
         data: () =>
           extendObject(amisData, typeof data === 'function' ? data() : data),
         ...rest,
         props: rest.props || {},
       });
       Object.keys(amisFunc).forEach((key) => {
-        this.app.$props[key] = amisFunc[key];
+        this.vm.$props[key] = amisFunc[key];
       });
-      this.vm = this.app.mount(this.domRef.current);
+      this.domRef.current.appendChild(this.vm.$mount().$el); // 最外层会多一个div【待优化】
       this.domRef.current.setAttribute('data-component-id', this.props.id);
     }
 
     componentDidUpdate() {
       if (!this.isUnmount) {
-        const { amisData } = this.resolveAmisProps();
-        if (this.vm) {
-          Object.keys(amisData).forEach((key) => {
-            this.vm[key] = amisData[key];
-          });
-          this.vm.$forceUpdate();
-        }
+        Object.keys(this.props).forEach(
+          (key) =>
+            typeof this.props[key] !== 'function' &&
+            (this.vm[key] = this.props[key]),
+        );
+        this.vm.$forceUpdate();
       }
     }
 
     componentWillUnmount() {
       this.isUnmount = true;
-      this.app.unmount();
+      this.vm.$destroy();
     }
 
     resolveAmisProps() {

@@ -1,4 +1,4 @@
-export const consoleTag = '[vue3-aipage-widget]'; // 输出标记
+export const consoleTag = '[aipage-widget]'; // 输出标记
 
 /**
  * 获取技术栈标识
@@ -15,21 +15,21 @@ export function getFramework(_framework?: string): string {
     case 'jq':
       curFramework = Framework.jquery;
       break;
+    case 'vue': // 默认使用 vue 2.0
     case 'vue2':
     case 'vue 2':
     case 'vue2.0':
     case 'vue 2.0':
       curFramework = Framework.vue2;
-      console.error(
-        'vue3-aipage-widget 不支持 vue2.0 技术栈，请改用aipage-widget支持。',
-      );
       break;
-    case 'vue': // 默认使用 vue 3.0
     case 'vue3':
     case 'vue 3':
     case 'vue3.0':
     case 'vue 3.0':
       curFramework = Framework.vue3;
+      console.error(
+        'aipage-widget 不支持 vue3.0 技术栈，请改用aipage-widget支持。',
+      );
       break;
     default:
       curFramework = Framework.react;
@@ -38,7 +38,7 @@ export function getFramework(_framework?: string): string {
 }
 
 /**
- * 当前vue3-aipage-widget支持的技术栈
+ * 当前aipage-widget支持的技术栈
  * 备注：vue2和vue3不能同时存在
  */
 export enum Framework {

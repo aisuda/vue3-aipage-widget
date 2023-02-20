@@ -1,4 +1,4 @@
-import { createVue3Component } from '../frameworkFactory/vue3Factory';
+import { createVue2Component } from '../frameworkFactory/vueFactory';
 import {
   getFramework,
   Framework,
@@ -67,8 +67,8 @@ export function registerRenderer(
     // 当前支持的技术栈类型
     const resolverMap: any = {
       react: (i: any) => i,
-      // vue2: createVue2Component,
-      vue3: createVue3Component,
+      vue2: createVue2Component,
+      // vue3: createVue3Component,
     };
 
     // 支持多技术栈

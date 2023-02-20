@@ -54,7 +54,7 @@ module.exports = {
     closeHotReload: false, // 是否关闭热更新
     autoOpenBrowser: true,
   },
-  linkDebug: {
+  linkDebug1: {
     entry: { // 外链调试（爱速搭中预览本地自定义组件）
       index: [
         './demo/react-widget/index.js',
@@ -74,7 +74,7 @@ module.exports = {
     closeHotReload: true, // 是否关闭热更新
     debugMode: 'aipage-editor'
   },
-  linkDebug2: { // 外链调试（使用构建后的 aipage-widget）
+  linkDebug: { // 外链调试（使用构建后的 aipage-widget）
     entry: { // 外链调试：爱速搭中预览本地自定义组件）
       index: [
         './demo2/react-widget/index.js',

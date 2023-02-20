@@ -1,11 +1,11 @@
-export declare const consoleTag = "[vue3-aipage-widget]";
+export declare const consoleTag = "[aipage-widget]";
 /**
  * 获取技术栈标识
  * 目的：兼容用户非标准写法
  */
 export declare function getFramework(_framework?: string): string;
 /**
- * 当前vue3-aipage-widget支持的技术栈
+ * 当前aipage-widget支持的技术栈
  * 备注：vue2和vue3不能同时存在
  */
 export declare enum Framework {

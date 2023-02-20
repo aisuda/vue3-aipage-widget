@@ -1,8 +1,10 @@
+/**
+ * @file 自定义组件所需的 vue2.0 对接
+ */
 import React from 'react';
-export declare function createVue3Component(vueObj: any): {
+export declare function createVue2Component(vueObj: any): {
     new (props: any): {
         domRef: any;
-        app: any;
         vm: any;
         isUnmount: boolean;
         componentDidMount(): void;
