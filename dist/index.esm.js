@@ -34,7 +34,7 @@ function getFramework(_framework) {
         case 'vue3.0':
         case 'vue 3.0':
             curFramework = Framework.vue3;
-            console.error('aipage-widget 不支持 vue3.0 技术栈，请改用aipage-widget支持。');
+            console.error('aipage-widget 不支持 vue3.0 技术栈，请改用 vue3-aipage-widget支持。');
             break;
         default:
             curFramework = Framework.react;
