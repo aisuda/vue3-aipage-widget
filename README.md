@@ -1,5 +1,5 @@
 # aipage-widget
-> 开发aipage-editor自定义组件的工具集（支持react、vue3.0技术栈）
+> 开发aipage-editor自定义组件的工具集（支持react、vue2.0技术栈）
 - 提供注册 aipage-editor 自定义插件和渲染器的方法；
 - 目前支持的技术栈：react、vue2.0技术栈，vue3.0自定义组件请使用[aipage-widget](https://github.com/aisuda/vue3-aipage-widget)。
 - 备注: 同一个应用禁止同时使用 vue3-aipage-widget 和 aipage-widget（vue2.0 和 vue3.0 不能混合使用）。
