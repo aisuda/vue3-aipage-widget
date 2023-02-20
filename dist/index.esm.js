@@ -645,10 +645,10 @@ function createVue3Component(vueObj) {
             if (!this.isUnmount) {
                 const { amisData } = this.resolveAmisProps();
                 if (this.vm) {
-                    // this.vm.$data.props = amisData; // 此方法无效
                     Object.keys(amisData).forEach((key) => {
                         this.vm[key] = amisData[key];
                     });
+                    this.vm.$forceUpdate();
                 }
             }
         }
