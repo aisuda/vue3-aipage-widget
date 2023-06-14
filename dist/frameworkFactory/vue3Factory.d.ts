@@ -12,7 +12,7 @@ export declare function createVue3Component(vueObj: any): {
             amisData: any;
             amisFunc: any;
         };
-        render(): JSX.Element;
+        render(): React.JSX.Element;
         context: any;
         setState<K extends never>(state: {} | ((prevState: Readonly<{}>, props: Readonly<any>) => {} | Pick<{}, K> | null) | Pick<{}, K> | null, callback?: (() => void) | undefined): void;
         forceUpdate(callback?: (() => void) | undefined): void;

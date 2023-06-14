@@ -1,6 +1,7 @@
 import isObject$1 from 'lodash/isObject';
 import React from 'react';
 import { createApp, isProxy, shallowRef, ref } from 'vue';
+import uView from 'vk-uview-ui';
 import pick from 'lodash/pick';
 import isNumber from 'lodash/isNumber';
 import cloneDeep from 'lodash/cloneDeep';
@@ -635,6 +636,8 @@ function createVue3Component(vueObj) {
                 ...rest,
                 props: rest.props || {},
             });
+            // 默认支持 uView UI
+            this.app.use(uView);
             Object.keys(amisFunc).forEach((key) => {
                 this.app.$props[key] = amisFunc[key];
             });

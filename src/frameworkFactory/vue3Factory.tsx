@@ -5,6 +5,9 @@ import isObject from 'lodash/isObject';
 import React from 'react';
 // @ts-ignore
 import { createApp, getCurrentInstance, ref, isProxy, shallowRef } from 'vue';
+// 引入 uView UI
+// @ts-ignore
+import uView from 'vk-uview-ui';
 import { extendObject } from '../utils';
 import { getBoxPosition, transformStyle } from '../utils/style';
 
@@ -38,6 +41,9 @@ export function createVue3Component(vueObj: any) {
         ...rest,
         props: rest.props || {},
       });
+      // 默认支持 uView UI
+      this.app.use(uView);
+
       Object.keys(amisFunc).forEach((key) => {
         this.app.$props[key] = amisFunc[key];
       });
