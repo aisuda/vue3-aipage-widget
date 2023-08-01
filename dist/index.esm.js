@@ -636,6 +636,13 @@ function createVue3Component(vueObj) {
                 ...rest,
                 props: rest.props || {},
             });
+            // 以下兼容写法是为了支持 uview，待后续在 uview 端优化
+            if (this.app && !this.app.prototype) {
+                this.app.prototype = {};
+            }
+            if (this.app && !this.app.filter) {
+                this.app.filter = () => { };
+            }
             // 默认支持 uView UI
             this.app.use(uView);
             Object.keys(amisFunc).forEach((key) => {
