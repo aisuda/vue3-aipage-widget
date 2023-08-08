@@ -173,6 +173,10 @@ function extendObject(target, src, persistOwnProps = true) {
     src && Object.keys(src).forEach((key) => (obj[key] = src[key]));
     return obj;
 }
+// 支持H5端使用uview
+if (!window.uni) {
+    window.uni = {};
+}
 
 /**
  * registerPlugin: 注册 aipage-editor 插件
