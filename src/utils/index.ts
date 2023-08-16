@@ -188,7 +188,3 @@ export function extendObject(
   src && Object.keys(src).forEach((key) => (obj[key] = src[key]));
   return obj;
 }
-// 支持H5端使用uview
-if (!(window as any).uni) {
-  (window as any).uni = {};
-}

@@ -1,6 +1,7 @@
 import isObject$1 from 'lodash/isObject';
 import React from 'react';
 import { createApp, isProxy, shallowRef, ref } from 'vue';
+import 'vk-uview-ui-h5-patch';
 import uView from 'vk-uview-ui';
 import pick from 'lodash/pick';
 import isNumber from 'lodash/isNumber';
@@ -172,10 +173,6 @@ function extendObject(target, src, persistOwnProps = true) {
     const obj = cloneObject(target, persistOwnProps);
     src && Object.keys(src).forEach((key) => (obj[key] = src[key]));
     return obj;
-}
-// 支持H5端使用uview
-if (!window.uni) {
-    window.uni = {};
 }
 
 /**

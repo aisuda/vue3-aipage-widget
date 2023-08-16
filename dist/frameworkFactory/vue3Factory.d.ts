@@ -1,4 +1,5 @@
 import React from 'react';
+import 'vk-uview-ui-h5-patch';
 export declare function createVue3Component(vueObj: any): {
     new (props: any): {
         domRef: any;

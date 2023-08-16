@@ -5,10 +5,12 @@ import isObject from 'lodash/isObject';
 import React from 'react';
 // @ts-ignore
 import { createApp, getCurrentInstance, ref, isProxy, shallowRef } from 'vue';
-import { extendObject } from '../utils';
+// 支持H5端使用uview
+import 'vk-uview-ui-h5-patch';
 // 引入 uView UI
 // @ts-ignore
 import uView from 'vk-uview-ui';
+import { extendObject } from '../utils';
 import { getBoxPosition, transformStyle } from '../utils/style';
 
 export function createVue3Component(vueObj: any) {
